@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+      $(() => {
+        $("#pincode").blur(() => {
+          let y = $("#pincode").val();
+          $.ajax({
+            data: { x: y },
+            url: "http://localhost:900/getItem",
+            type: "get",
+            dataType: "json",
+            success: (output) => {
+              if(output.status){
+              
+             $("#areaname").text(output.itemdetails.area);
+              
+              }
+              else
+              $("#areaname").text("area code does not exist in table")
+            },
+            error: (error) => {
+              console.log("failure " + error);
+            },
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <br />
+    <input type="text" placeholder="pincode" id="pincode" />
+    <!-- <input type="text" placeholder="areaname" id="areaname" /> -->
+    <span id="areaname"> areaname </span>
+  </body>
+</html>

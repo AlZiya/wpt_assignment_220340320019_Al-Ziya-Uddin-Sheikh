@@ -1,0 +1,177 @@
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+      $(() => {
+        function showContents() {
+          let aj = {
+            data: {},
+            url: "http://localhost:900/getAllItems",
+            type: "get",
+            dataType: "json",
+            success: (dgbs) => {
+              items = dgbs;
+              console.log(items);
+
+              let itemscontents = "";
+              for (let i = 0; i < items.length; i++) {
+                itemscontents +=
+                  "<br/>" +
+                  items[i].itemno +
+                  "  " +
+                  items[i].itemname +
+                  "  " +
+                  items[i].price +
+                  "  " +
+                  items[i].category;
+              }
+              $("#contents").html(itemscontents);
+            },
+            error: (seeError) => {
+              console.log("failure " + seeError);
+            },
+          };
+          $.ajax(aj);
+        }
+        //-----------------------------------------------------
+        showContents(); // calling of showContents();
+        //-----------------------------------------------------------
+
+        $("#itemno").blur(() => {
+          let y = $("#itemno").val();
+          document.querySelector("#itemno").disable = true;
+          let aj = {
+            data: { x: y },
+            url: "http://localhost:900/getItem",
+            type: "get",
+            dataType: "json",
+            success: (output) => {
+              if(output.itemnofoundstatus){
+                console.log("blur on itemno "+output.itemnofoundstatus);
+                $("#message").text("item details found");
+               $("#itemname").val(output.itemdetails.itemname);
+              //  document.querySelector("#itemname").value =output.itemdetails.itemname;
+              $("#price").val(output.itemdetails.price);
+              $("#category").val(output.itemdetails.category);
+            } else{
+              $("#message").text("item details not found");
+              $("#itemname").val("");
+              $("#price").val("");
+              $("#category").val("");
+            }
+            },
+            error: (error) => {
+              console.log("failure " + error);
+            },
+          };
+
+          $.ajax(aj);
+        });
+        //-----------------------------------------------------------
+        $("#add").click(()=>{
+          let input ={
+            x:$("#itemno").val(),
+            y:$("#itemname").val(),
+            z:$("#price").val(),
+            a:$("#category").val(),
+
+          };
+          let ajaxparams ={
+            data:input,
+            url:"http://localhost:900/addItem",
+            type:"get",
+            dataType:"json",
+            success:(output) =>{
+              if(output){
+                $("#message").text("added successfull");
+                $("#message").removeClass("nm").addClass("em");
+
+              } else{
+                $("#message").text("could not add item");
+              }
+            $("#itemname").val("");
+            $("#price").val("");
+           $("#category").val("");
+           showContents();
+            },
+            error:(err)=>{
+              console.log("failure"+err);
+            },
+         };
+        $.ajax(ajaxparams);
+        });
+
+        //------------------------------------------
+        $("#update").click(()=>{
+
+          let input ={
+            itemno : $("#itemno").val(),
+            itemname: $("#itemname").val(),
+            price: $("#price").val(),
+            category: $("#category").val(),
+          };
+          console.log(input);
+
+          $.ajax({
+            data : input,
+            url:"http://localhost:900/updateitem",
+            type:"get",
+            dataType:"json",
+            success:(output) =>{
+              console.log("update success "+output);
+              if(output){
+                $("#message").text("updated successfully");
+                $("#message").removeClass("em").addClass("nm");
+              }else{
+                $("#message").text("could not update item");
+              }
+              $("#itemname").val("");
+              $("#price").val("");
+              $("#category").val("");
+              showContents();
+              document.querySelector("#itemno").disable = false;
+              document.querySelector("#itemno").focus();
+            },
+            error:(mistake) =>{
+              console.log("error "+ mistake);
+            },
+
+
+          } );
+
+
+        });
+        //----------------------------------------------------------
+        //showContents();
+
+
+
+
+      });
+    </script>
+    <style>
+      .em {
+        color: green;
+      }
+      .nm {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <input type="text" placeholder="itemno" id="itemno" />
+    <span id="message"> message </span>
+    <br />
+    <input type="text" placeholder="itemname" id="itemname" />
+    <br />
+    <input type="text" placeholder="price" id="price" />
+    <br />
+    <input type="text" placeholder="category" id="category" />
+    <br /><br />
+    <br /><br /><button id="add">Add Item</button>
+    <button id="update">update Item</button>
+    <hr />
+    <p id="contents">all items show it here</p>
+  </body>
+</html>

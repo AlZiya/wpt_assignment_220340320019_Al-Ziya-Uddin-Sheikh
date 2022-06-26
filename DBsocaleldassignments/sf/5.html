@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+         $(() => {
+        $("#accno").blur(() => {
+          let y = $("#accno").val();
+          $.ajax({
+            data: { x: y },
+            url: "http://localhost:900/getItem",
+            type: "get",
+            dataType: "json",
+            success: (output) => {
+              if(output.status){
+              
+             $("#balance").text(output.itemdetails.balance);
+              
+              }
+              else
+              $("#balance").text("acc not exist in table")
+            },
+            error: (error) => {
+              console.log("failure " + error);
+            },
+          });
+        });
+      });
+    </script>
+</head>
+<body>
+    <br />
+    <input type="text" placeholder="accno" id="accno" />
+    <!-- <input type="text" placeholder="areaname" id="areaname" /> -->
+    <span id="balance"> balance </span>
+    
+</body>
+</html>

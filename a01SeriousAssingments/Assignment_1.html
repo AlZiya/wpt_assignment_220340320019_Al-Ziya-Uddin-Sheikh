@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+
+    <title>Assignment_1</title>
+</head>
+
+<style>
+    .center {
+        margin: 0;
+        position: absolute;
+        top: 30%;
+        left: 30%;
+
+    }
+</style>
+
+<body>
+
+    <br> <br> <br> <br>
+    <div class="center">
+        <input type="text" id="textBox" placeholder="itemno " /> <span id="span"></span><br><br>
+        <button disabled id="but1">add</button>
+        <button disabled id="but2">edit</button>
+        <button disabled id="but3">delete</button>
+        <button disabled id="but4">view all</button>
+        <button disabled id="but5">show odd position</button>
+        <hr>
+        <p id="contents"> I have to show array here </p>
+    </div>
+
+</body>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        var showViewALl = true;
+        var odd_position = true;
+        var a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        const input = document.querySelector("#textBox");
+        input.addEventListener('blur', () => {
+            console.log("blur event");
+            let input = document.querySelector("#textBox").value;
+            let count = 0;
+            for (let i = 0; i < a.length; i++) {
+
+                if (input == a[i]) {
+                    count++;
+                    break;
+                }
+            }
+            if (count > 0) {
+                document.querySelector("#but2").disabled = false;
+                document.querySelector("#but3").disabled = false;
+            }
+            else {
+                document.querySelector("#but1").disabled = false;
+            }
+        });
+
+        const update = document.querySelector("#but1");
+        update.addEventListener('click', () => {
+                showViewALl=true;
+            console.log("click");
+            let input = document.querySelector("#textBox").value;
+            let count = 0;
+            for (let i = 0; i < a.length; i++) {
+
+                if (input == a[i]) {
+                    count++;
+                    break;
+                }
+            }
+            if (count > 0) {
+                document.querySelector("#but1").disabled = true;
+                document.querySelector("#but2").disabled = true;
+                document.querySelector("#but3").disabled = true;
+                document.querySelector("#but4").disabled = true;
+                document.querySelector("#but5").disabled = true;
+            }
+            else {
+                console.log(a.push(input));
+                document.querySelector("#but1").disabled = true;
+                document.querySelector("#but2").disabled = true;
+                document.querySelector("#but3").disabled = true;
+                document.querySelector("#but4").disabled = true;
+                document.querySelector("#but5").disabled = true;
+
+            }
+
+        });
+        const edit = document.querySelector("#but2");
+        edit.addEventListener('click', () => {
+            var msg = "Please give the number";
+            while (true) {
+                if (fun())
+                    continue;
+                else
+                    break;
+            }
+            function fun() {
+                let input = document.querySelector("#textBox").value;
+                let pr = prompt(msg, input);
+                let count = 0;
+                for (let i = 0; i < a.length; i++) {
+                    if (pr == a[i]) {
+                        count++;
+                        break;
+                    }
+                }
+                if (count > 0) {
+                    msg = "Please enter the correct number";
+                    return true;
+                }
+                else {
+                    document.querySelector("#textBox").value = pr;
+                    false;
+                }
+            }
+
+        });
+        const del = document.querySelector("#but3");
+        del.addEventListener('click', () => {
+            showViewALl=true;
+            document.querySelector("#span").innerHTML = "Deleting  array elements"
+            let input = document.querySelector("#textBox").value;
+            let count = 0;
+            for (let i = 0; i < a.length; i++) {
+                if (input == a[i]) {
+                    count++;
+                    break;
+                }
+            }
+            if (count > 0) {
+                console.log(a=a.filter(function fun(x) {
+
+                    if (x != input)
+                        return x;
+
+                })
+                )
+            }
+            else {
+                alert("The element you want to delete is not there in array")
+            }
+
+
+        });
+
+        document.getElementById("contents").addEventListener("mouseover", () => {
+            enableBtn();
+            function enableBtn() {
+                if (showViewALl)
+                    document.querySelector("#but4").disabled = false;
+
+            }
+        });
+
+
+        const view_all = document.querySelector("#but4");
+        view_all.addEventListener('click', () => {
+            console.log("view all");
+            document.querySelector("#span").innerHTML = "Showing  array elements"
+            document.querySelector("#contents").innerHTML = "Array elements are as follows:-" + "<Br/>" + "[";
+            for (let i = 0; i < a.length - 1; i++) {
+
+                document.querySelector("#contents").innerHTML += a[i] + ", ";
+            }
+            document.querySelector("#contents").innerHTML += a[a.length - 1] + "]";
+            document.querySelector("#but4").disabled = true;
+            showViewALl = true;
+        });
+
+        document.getElementById("contents").addEventListener("mouseover", () => {
+            enableBtn();
+            function enableBtn() {
+                if (odd_position)
+                    document.querySelector("#but5").disabled = false;
+
+            }
+        });
+
+        const odd = document.querySelector("#but5");
+        showViewALl=true;
+        odd.addEventListener('click', () => {
+            console.log("view all");
+            document.querySelector("#span").innerHTML = "Showing odd position elements of array"
+            document.querySelector("#contents").innerHTML = "Odd position array elements are as follows:-" + "<Br/>" + "[";
+            for (let i = 0; i < a.length - 1; i++) {
+
+                document.querySelector("#contents").innerHTML += a[i] + ", ";
+                i++;
+            }
+            document.querySelector("#contents").innerHTML +=a[a.length - 1] +"]";
+           document.querySelector("#but5").disabled = true;
+            odd_position = true;
+        });
+    });
+</script>
+
+</html>

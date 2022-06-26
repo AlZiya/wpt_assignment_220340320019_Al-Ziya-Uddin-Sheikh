@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Assignment_4</title>
+    <script>
+        class EmployeeStatus {
+            constructor(status, Employeeobject) {
+                this.status = false;
+                this.Employeebject = Employee;
+            }
+    
+        };
+        class Employee {
+            constructor(empno, empname, email, deptid) {
+                this.empno = empno;
+                this.empname = empname;
+                this.email = email;
+                this.deptid = deptid;
+            }
+            setEmployeeDetails(empno, empname, email, deptid) {
+                this.empno = empno;
+                this.empname = empname;
+                this.email = email;
+                this.deptid = deptid;
+            }
+    
+            getEmployeeDetails() {
+                return this.empno + "--" + this.empname + "--" +
+                    this.email + "--" + this.deptid;
+            }
+        }
+    
+        class Logic {
+        
+            constructor() {
+    
+                this.Employees = [new Employee (  101 ,  "Rohan" , "rohan@gmail" ,  10 ),
+                new Employee (  102 ,  "Mohan",  "mohan@gmail", 20 ),
+                new Employee (  105 ,  "Divyani",  "divyani@gmail",  30 ),
+                new Employee (  104 ,  "Dipak",  "dipak@gmail",  40 )];
+    
+    
+            }
+            ////////////////////////////////////////////////
+            
+       addEmployee(input) {
+          let added = false;
+          this.Employees.push(input);
+          added = true;
+          return added;
+        }
+    
+    ///////////////////////////////////////////////to get employee by empno
+    
+            getEmployeeDetailsLogic(empno) {
+                let output = new EmployeeStatus(false, {});
+                for (let i = 0; i < this.Employees.length; i++) {
+                    if (this.Employees[i].empno == empno) {
+                        output.result = true;
+                        output.Employeedetails = this.Employees[i];
+                        break;
+                    }
+    
+                }
+                return output;
+            }
+    
+    ////////////////////////////////////////////////update employee details
+            updateEmployeeDetailsLogic(updatedemp) {
+                console.log(updatedemp.itemno);
+                let output = false;
+                for (let i = 0; i < this.Employees.length; i++) {
+                    if (this.Employees[i].empno == updatedemp.empno) {
+    
+                        this.Employees[i].setEmployeeDetails(updatedemp.empno, updatedemp.empname, updatedemp.email,updatedemp.deptid);
+                        output = true;
+                        break;
+                    }
+    
+                }
+                console.log("inside update function" + output);
+                return output;
+            }
+            //////////////////////////////////////delete 
+    
+            removeEmployeeDetailsLogic(empno) {
+                let output = false;
+                for (let i = 0; i < this.Employees.length; i++) {
+                    if (this.Employees[i].empno == empno) {
+                        this.Employees.splice(i, 1); 
+                        output = true;
+                        break;
+                    }
+    
+                }
+                console.log("inside delte function" + output);
+                return output;
+            }
+            /////////////////////show emp details
+    
+            getAllEmployees() {
+                return this.Employees;
+            }
+    
+        }//end of the logic class
+
+
+
+        window.addEventListener('DOMContentLoaded', () => {
+            //-------------------
+            let logic = new Logic();
+            showAllEmployee();
+            //--------------------
+            function showAllEmployee() {
+				console.log("show all Employee");
+
+
+				let output = logic.getAllEmployees();
+
+
+
+				let msg = "";
+				for (let i = 0; i < output.length; i++) //dinosaur way..
+					msg += "<Br/>" + output[i].empno + " --- " + output[i].empname +
+						"--" + output[i].email +
+						"--" + output[i].deptid;
+
+				document.querySelector("#contents").innerHTML = msg;
+
+
+			}     //empno, empname, email, deptid
+            //--------------------------
+            const empno = document.querySelector("#empno");
+			empno.addEventListener('blur', () => {
+                    console.log("blur event");
+           
+
+                    var empn = document.querySelector("#empno").value;
+                    console.log("input is" + empn);
+                    let output = logic.getEmployeeDetailsLogic(empn);
+                    
+
+                    if (output.result ) {
+                        document.querySelector("#empname").value = output.Employeedetails.empname;
+                        document.querySelector("#email").value = output.Employeedetails.email;
+                        document.querySelector("#deptid").value = output.Employeedetails.deptid;
+
+                        document.querySelector("#add").disabled = true;
+                        document.querySelector("#modify").disabled = false;
+                        document.querySelector("#remove").disabled = false;
+                        document.querySelector("#msg").innerText = "Employeedetails details found";
+
+                    }
+                    else {
+                        console.log("no item was found");
+                        document.querySelector("#add").disabled = false;
+                        document.querySelector("#modify").disabled = true;
+                        document.querySelector("#remove").disabled = true;
+                        document.querySelector("#msg").innerText = "Employeedetails  not found";
+                        document.querySelector("#empname").value = "";
+                        document.querySelector("#email").value = "";
+                        document.querySelector("#deptid").value = "";
+                    }
+
+
+            });
+
+            ////////////////////////////////////////////////
+            const modify = document.querySelector("#modify");
+			modify.addEventListener('click', () => {
+
+			
+				let input = {
+					empno: document.querySelector("#empno").value,
+					empname: document.querySelector("#empname").value,
+					email: document.querySelector("#email").value,
+					deptid: document.querySelector("#deptid").value
+				};//empno, empname, email, deptid
+
+
+
+				console.log(input);
+				let output = logic.updateEmployeeDetailsLogic(input);
+
+				
+				if (output) {
+					document.querySelector("#msg").innerText = "update suceeded";
+					document.querySelector("#add").disabled = true;
+					document.querySelector("#modify").disabled = true;
+					document.querySelector("#remove").disabled = true;
+					document.querySelector("#empno").value = "";
+
+					document.querySelector("#empname").value = "";
+					document.querySelector("#email").value = "";
+					document.querySelector("#deptid").value = "";
+
+				}
+				else {
+					document.querySelector("#msg").innerText = "update failed";
+
+					document.querySelector("#add").disabled = true;
+					document.querySelector("#modify").disabled = true;
+					document.querySelector("#remove").disabled = true;
+
+				}
+				showAllEmployee();
+				
+
+			});
+            ///////////-----------------------------------
+            const remove = document.querySelector("#remove");
+			remove.addEventListener('click', () => {
+				let input = document.querySelector("#empno").value;
+
+				console.log(input);
+				let output = logic.removeEmployeeDetailsLogic(input);
+				console.log("after delte function" + output);
+
+				
+				if (output) {
+					document.querySelector("#msg").innerText = "delete suceeded ";
+					document.querySelector("#add").disabled = true;
+					document.querySelector("#modify").disabled = true;
+					document.querySelector("#remove").disabled = true;
+					document.querySelector("#empno").value = "";
+
+					document.querySelector("#empname").value = "";
+					document.querySelector("#email").value = "";
+					document.querySelector("#deptid").value = "";
+
+				}
+				else {
+					document.querySelector("#msg").innerText = "delete failed";
+
+                    document.querySelector("#add").disabled = true;
+					document.querySelector("#modify").disabled = true;
+					document.querySelector("#remove").disabled = true;
+
+				}
+				showAllEmployee();
+
+			});
+            //////----------------------------
+            let add = document.querySelector("#add");
+        add.addEventListener("click", () => {
+            let input = {
+					empno: document.querySelector("#empno").value,
+					empname: document.querySelector("#empname").value,
+					email: document.querySelector("#email").value,
+					deptid: document.querySelector("#deptid").value
+				}; 
+          
+          document.querySelector("#modify").disabled = true;
+          document.querySelector("#add").disabled = false;
+          let output = logic.addEmployee(input); 
+          let message = document.querySelector("#msg");
+
+          if (output) {
+            message.innerText = "added successfully";
+          } else {
+            message.innerText = "could not add item";
+          }
+         document.querySelector("#empname").value = "";
+		document.querySelector("#email").value = "";
+		document.querySelector("#deptid").value = "";
+
+        showAllEmployee();
+
+          document.querySelector("#empno").disabled = false;
+        });
+
+    
+    
+        });
+
+    
+    
+        
+    
+    
+    </script>
+
+
+</head>
+
+<body>
+    <br> <br> <br> <br>
+    <div class="center">
+        <input type="text" id="empno" placeholder="empno" /><span>empno   </span> <span id="msg"> msg</span> <br>
+        <input type="text" id="empname" placeholder="empname" /><span>empname</span><br>
+        <input type="text" id="email" placeholder="email" /><span>email</span><br>
+        <input type="text" id="deptid" placeholder="deptid" /><span>deptid</span> <br><br>
+        <button disabled id="add">add</button>
+        <button disabled id="modify">modify</button>
+        <button disabled id="remove">remove</button>
+        <button id="viewall">view all</button>
+        <button id="viewondeptid">view on deptid</button>
+        <hr>
+        <!-- <span id="span">empno</span><br><br>  -->
+        <p id="contents"> Check</p>
+    </div>
+
+
+    
+</body>
+
+</html>
